@@ -12,14 +12,14 @@ import car_engine
 engine = car_engine.CarEngine()
 L = 100.0
 maxv = 60.0
-maxa = 60.0
+maxa = 40.0
 totalT = 10.0
 
 def accelerate(x, v, t):    
     if x >= L:
         a = 0.
         pedalF = 0.
-    elif t>=0 and t<maxv/maxa:
+    elif v <= maxv:
         a = maxa
         pedalF = engine.optimal_pedal_force(v, a)
     elif x<L and x>L-0.5*maxv*maxv/maxa:
@@ -38,7 +38,7 @@ def deriv(xvF, t):
         return np.array([max(0, xvF[1]), a, pedalF])
 
 def main():
-    times = np.linspace(0.0, totalT, 101)
+    times = np.linspace(0.0, totalT, 1001)
     xvFinit = np.array([0.0, 0.0, 0.0])
     xvFvals = odeint(deriv, xvFinit, times)
     for t, xv in zip(times, xvFvals):
