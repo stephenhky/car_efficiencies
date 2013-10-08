@@ -22,20 +22,22 @@ class Car_OnRoad:
             a = self.maxa
         else:
             a = 0.
-        pedalF = self.engine.optimal_pedal_force(v, a)
-        return a, pedalF
+        return a
         
-    def derivative(self, xvF, t):
-        a, pedalF = self.accelerate(xvF[0], xvF[1], t)
-        return np.array([max(0, xvF[1]), a, pedalF])
+    def derivative(self, xv, t):
+        a = self.accelerate(xv[0], xv[1], t)
+        return np.array([max(0, xv[1]), a])
 
-    def runOnRoad(self, xvFinit, times):
-        return odeint(self.derivative, xvFinit, times)
+    def runOnRoad(self, xvinit, times):
+        xv_vals = odeint(self.derivative, xvinit, times)
+        F_vals = map(lambda xv, t: self.engine.optimal_pedal_force(xv[1], self.accelerate(xv[0], xv[1], t)),
+                     xv_vals, times)
+        return xv_vals, F_vals
 
-    def mpg(self, xvFvals):
-        num_steps = len(xvFvals)
-        xarray = np.array(map(lambda item: item[0], xvFvals))
-        Farray = np.array(map(lambda item: item[2], xvFvals))
+    def mpg(self, xv_vals, F_vals):
+        num_steps = len(xv_vals)
+        xarray = np.array(map(lambda item: item[0], xv_vals))
+        Farray = np.array(F_vals)
 
         if num_steps <= 1:
             return np.array([float('NaN')]), np.array([float('NaN')])
@@ -55,16 +57,22 @@ class Car_OnRoad:
                 cumlMPG.append(sum(instwork[:(tstep+1)])/sum(dxarray[:(tstep+1)]))
             cumlMPG = np.array(cumlMPG)
             
+            print Farray
+            print dxarray
+            print instwork
+            print instMPG
+            print cumlMPG
+            
             return instMPG, cumlMPG
 
 def main():
     car = Car_OnRoad()
     times = np.linspace(0.0, totalT, 11)
-    xvFinit = np.array([0.0, 0.0, 0.0])
-    xvFvals = car.runOnRoad(xvFinit, times)
-    instMPG, cumlMPG = car.mpg(xvFvals)
-    for t, xv, instmpg, cumlmpg in zip(times, xvFvals, instMPG, cumlMPG):
-        print t, xv[1], xv[0], xv[2], instmpg, cumlmpg
+    xvinit = np.array([0.0, 0.0])
+    xv_vals, F_vals = car.runOnRoad(xvinit, times)
+    instMPG, cumlMPG = car.mpg(xv_vals, F_vals)
+    for t, xv, F, instmpg, cumlmpg in zip(times, xv_vals, F_vals, instMPG, cumlMPG):
+        print t, xv[1], xv[0], F, instmpg, cumlmpg
 
 if __name__ == '__main__':
     main()
