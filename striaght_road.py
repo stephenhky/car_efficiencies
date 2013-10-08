@@ -57,12 +57,6 @@ class Car_OnRoad:
                 cumlMPG.append(sum(instwork[:(tstep+1)])/sum(dxarray[:(tstep+1)]))
             cumlMPG = np.array(cumlMPG)
             
-            print Farray
-            print dxarray
-            print instwork
-            print instMPG
-            print cumlMPG
-            
             return instMPG, cumlMPG
 
 def main():
