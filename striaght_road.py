@@ -59,14 +59,14 @@ class Car_OnRoad:
             
             return instMPG, cumlMPG
 
-def main():
-    car = Car_OnRoad()
-    times = np.linspace(0.0, totalT, 11)
+def testCar(car, totalT, numT):
+    times = np.linspace(0.0, totalT, numT)
     xvinit = np.array([0.0, 0.0])
     xv_vals, F_vals = car.runOnRoad(xvinit, times)
     instMPG, cumlMPG = car.mpg(xv_vals, F_vals)
     for t, xv, F, instmpg, cumlmpg in zip(times, xv_vals, F_vals, instMPG, cumlMPG):
-        print t, xv[1], xv[0], F, instmpg, cumlmpg
+        print t, xv[1], xv[0], F, instmpg, cumlmpg    
 
 if __name__ == '__main__':
-    main()
+    car = Car_OnRoad()
+    testCar(car, totalT, 11)
