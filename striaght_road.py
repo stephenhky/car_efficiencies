@@ -17,7 +17,7 @@ class Car_OnRoad:
         self.maxv = 60.0
         self.maxa = 40.0
         
-    def accelerate(self, x, v, t):
+    def accelerate(self, x, v):
         if v <= self.maxv:
             a = self.maxa
         else:
@@ -25,13 +25,13 @@ class Car_OnRoad:
         return a
         
     def derivative(self, xv, t):
-        a = self.accelerate(xv[0], xv[1], t)
+        a = self.accelerate(xv[0], xv[1])
         return np.array([max(0, xv[1]), a])
 
     def runOnRoad(self, xvinit, times):
         xv_vals = odeint(self.derivative, xvinit, times)
-        F_vals = map(lambda xv, t: self.engine.optimal_pedal_force(xv[1], self.accelerate(xv[0], xv[1], t)),
-                     xv_vals, times)
+        F_vals = map(lambda xv: self.engine.optimal_pedal_force(xv[1], self.accelerate(xv[0], xv[1])),
+                     xv_vals)
         return xv_vals, F_vals
 
     def mpg(self, xv_vals, F_vals):
