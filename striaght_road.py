@@ -61,7 +61,7 @@ class Car_OnRoad:
 
 def testCar(car, totalT, numT):
     times = np.linspace(0.0, totalT, numT)
-    xvinit = np.array([0.0, 0.0])
+    xvinit = np.array([0.0, 10.0])
     xv_vals, F_vals = car.runOnRoad(xvinit, times)
     instMPG, cumlMPG = car.mpg(xv_vals, F_vals)
     for t, xv, F, instmpg, cumlmpg in zip(times, xv_vals, F_vals, instMPG, cumlMPG):
@@ -69,4 +69,4 @@ def testCar(car, totalT, numT):
 
 if __name__ == '__main__':
     car = Car_OnRoad()
-    testCar(car, totalT, 11)
+    testCar(car, totalT, 101)
