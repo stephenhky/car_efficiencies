@@ -57,9 +57,9 @@ class CarRide:
             
             return instMPG, cumlMPG
         
-def testride(ride, totalT=10, steps=101):
+def testride(ride, totalT=10, steps=101, initv=10.):
     time_array = np.linspace(0, totalT, steps)
-    x_array, v_array, a_array, F_array = ride.solve_motion(time_array, 0., 10.)
+    x_array, v_array, a_array, F_array = ride.solve_motion(time_array, 0., initv)
     inst_mpg_array, cuml_mpg_array = ride.mpg(x_array, F_array)
     for t, x, v, a, inst_mpg, cuml_mpg in zip(time_array, x_array, v_array, 
                                               a_array, inst_mpg_array,
