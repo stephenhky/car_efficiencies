@@ -57,12 +57,15 @@ class CarRide:
             
             return instMPG, cumlMPG
         
-if __name__ == '__main__':
-    ride = CarRide()
-    time_array = np.linspace(0, 10, 101)
+def testride(ride, totalT=10, steps=101):
+    time_array = np.linspace(0, totalT, steps)
     x_array, v_array, a_array, F_array = ride.solve_motion(time_array, 0., 10.)
     inst_mpg_array, cuml_mpg_array = ride.mpg(x_array, F_array)
     for t, x, v, a, inst_mpg, cuml_mpg in zip(time_array, x_array, v_array, 
                                               a_array, inst_mpg_array,
                                               cuml_mpg_array):
         print t, x, v, a, inst_mpg, cuml_mpg
+        
+if __name__ == '__main__':
+    ride = CarRide()
+    testride(ride)
